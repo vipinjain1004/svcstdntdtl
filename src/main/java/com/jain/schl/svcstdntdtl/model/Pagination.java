@@ -6,7 +6,7 @@ import lombok.Data;
 public class Pagination {
 	private int offset;
 	private int limit;
-	private int total;
+	private long total;
 	public int getOffset() {
 		return offset;
 	}
@@ -19,10 +19,10 @@ public class Pagination {
 	public void setLimit(int limit) {
 		this.limit = limit;
 	}
-	public int getTotal() {
+	public long getTotal() {
 		return total;
 	}
-	public void setTotal(int total) {
+	public void setTotal(long total) {
 		this.total = total;
 	}
 	@Override

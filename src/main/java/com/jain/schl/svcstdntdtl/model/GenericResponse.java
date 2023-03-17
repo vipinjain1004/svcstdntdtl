@@ -6,7 +6,17 @@ import lombok.Data;
 public class GenericResponse<T> {
 	private T responseBody;
 	private ResponseMetaData responseMetaData;
+	private Pagination pagination;
 	
+	
+	public Pagination getPagination() {
+		return pagination;
+	}
+
+	public void setPagination(Pagination pagination) {
+		this.pagination = pagination;
+	}
+
 	public T getResponseBody() {
 		return responseBody;
 	}
@@ -25,6 +35,9 @@ public class GenericResponse<T> {
 
 	@Override
 	public String toString() {
-		return "GenericResponse [responseBody=" + responseBody + ", responseMetaData=" + responseMetaData + "]";
+		return "GenericResponse [responseBody=" + responseBody + ", responseMetaData=" + responseMetaData
+				+ ", pagination=" + pagination + "]";
 	}
+
+
 }
