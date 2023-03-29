@@ -1,5 +1,6 @@
 package com.jain.schl.svcstdntdtl.model;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 
 import org.springframework.data.annotation.Id;
@@ -17,6 +18,23 @@ public class StudentDetails {
 	private String fatherName;
 	private Date dateOfBirth;
 	private String stdClass;
+	private String admsnYr;
+	private LocalDateTime admsnDt;
+	
+	
+	
+	public LocalDateTime getAdmsnDt() {
+		return admsnDt;
+	}
+	public void setAdmsnDt(LocalDateTime admsnDt) {
+		this.admsnDt = admsnDt;
+	}
+	public String getAdmsnYr() {
+		return admsnYr;
+	}
+	public void setAdmsnYr(String admsnYr) {
+		this.admsnYr = admsnYr;
+	}
 	public String getStdClass() {
 		return stdClass;
 	}

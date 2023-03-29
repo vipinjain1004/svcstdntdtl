@@ -1,6 +1,7 @@
 package com.jain.schl.svcstdntdtl.controller;
 
 import java.io.IOException;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.stream.Collector;
 import java.util.stream.Collectors;
@@ -50,6 +51,9 @@ public class StudentDetailsController {
 	public GenericResponse add(@RequestBody StudentDetails studentDetails) throws CustomErrorHandler {
 		try {
 			System.out.println("student add api" + studentDetails);
+			studentDetails.setAdmsnYr("2023-24");
+			studentDetails.setAdmsnDt(LocalDateTime.now());
+			
 			if (StringUtils.isEmpty(studentDetails.getfName()) || StringUtils.isEmpty(studentDetails.getFatherName())
 					|| StringUtils.isEmpty(studentDetails.getDateOfBirth())) {
 				return exceptionResponse("Name, Father's Name, Date of birth should not be empty",
@@ -91,7 +95,6 @@ public class StudentDetailsController {
 			@RequestParam(required = false, defaultValue = "10") int limit)
 			throws InterruptedException, CustomErrorHandler {
 		try {
-
 			System.out.println("student getAll api");
 			List<StudentDetails> list = null;
 			long totalCount = 0;
