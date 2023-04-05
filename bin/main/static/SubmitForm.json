@@ -1,0 +1,66 @@
+{
+"financialYear" : "2022-23",
+"id" : "12345664545454",
+"userId" : "Ramesh",
+"hardCopyReceiptNo" : "12387",
+"stdClass" : "LKG",
+"feesDetails" : [
+	{ 
+		"id" :"212345_1",
+		"feesFor" :"ADMISSION",		
+		"amount" : 20.32,		
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"	
+	},
+	{ 
+		"id" :"212345_2",
+		"feesFor" :"EXAM",
+		"amount" : 100,	
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"	
+	},
+	{ 
+		"id" :"212345_3",
+		"feesFor" :"JULY",				
+		"amount" : 100,	
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"				
+	},
+	{ 
+	   "id" :"212345_4",
+		"feesFor" :"AUG",				
+		"amount" : 100,	
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"				
+	},
+	{ 
+		"id" :"212345_5",
+		"feesFor" :"SEP",				
+		"amount" : 100,	
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"				
+	},
+	{ 
+		"id" :"212345_6",
+		"feesFor" :"OCT",				
+		"amount" : 100,	
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"				
+	},
+	{ 
+		"id" :"212345_7",
+		"feesFor" :"NOV",				
+		"amount" : 100,	
+		"dt" :"10-10-23",
+		"userId" :"123456",
+		"status" :"SUBMITTED"				
+	}
+	]
+	
+}
