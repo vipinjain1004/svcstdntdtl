@@ -46,6 +46,8 @@ public class FeeService {
 
 	@Autowired
 	private FeesDetailsRepository feesDetailsRepository;
+	
+	final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	static String[] months = new DateFormatSymbols().getShortMonths();
 	private static List<String> MONTHS = Arrays.asList("JUL", "AUG", "SEP", "OCT", "NOV", "DEC", "JAN", "FEB", "MAR",
@@ -53,7 +55,7 @@ public class FeeService {
 
 	@PostConstruct
 	public void initilization() {
-
+		 
 	}
 
 	public Document getFeesDetails(String stdId, String financialYear, String stdClass) {
@@ -61,7 +63,7 @@ public class FeeService {
 			if (StringUtils.isEmpty(financialYear)) {
 				financialYear = "2023-24";
 			}
-			final SimpleDateFormat simpleDateFormat = new SimpleDateFormat();
+			
 			ObjectMapper objectMapper = new ObjectMapper();
 			Document d = objectMapper.readValue(getClass().getResource("/static/FeesDetails.json"), Document.class);
 			d.put("financialYear", financialYear);
@@ -83,7 +85,7 @@ public class FeeService {
 			response.stream().forEach(item -> {
 				
 				for (Fees fee : item.getFeesDetails()) {
-					Date date = new Date();
+					
 					Map<String, Object> fdMap = new LinkedHashMap<>();
 					fdMap.put("id", UUID.randomUUID());
 					fdMap.put("feesFor", fee.getFeesFor());
