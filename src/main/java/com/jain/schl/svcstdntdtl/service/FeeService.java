@@ -38,15 +38,19 @@ import com.jain.schl.svcstdntdtl.model.Pagination;
 import com.jain.schl.svcstdntdtl.model.ResponseMetaData;
 import com.jain.schl.svcstdntdtl.model.StudentDetails;
 import com.jain.schl.svcstdntdtl.repo.FeesDetailsRepository;
+import com.jain.schl.svcstdntdtl.repo.StudentDetailsRepository;
 
 import lombok.patcher.inject.LiveInjector.LibInstrument;
 
 @Service
 public class FeeService {
+	
+	@Autowired
+	private StudentDetailsRepository studentDetailsRepository;
 
 	@Autowired
 	private FeesDetailsRepository feesDetailsRepository;
-	
+
 	final SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd-MM-yyyy");
 
 	static String[] months = new DateFormatSymbols().getShortMonths();
@@ -55,7 +59,7 @@ public class FeeService {
 
 	@PostConstruct
 	public void initilization() {
-		 
+
 	}
 
 	public Document getFeesDetails(String stdId, String financialYear, String stdClass) {
@@ -63,10 +67,17 @@ public class FeeService {
 			if (StringUtils.isEmpty(financialYear)) {
 				financialYear = "2023-24";
 			}
-			
-			ObjectMapper objectMapper = new ObjectMapper();
+			StudentDetails studentDetails = studentDetailsRepository.findById(stdId).get();
+			String admsnYr = studentDetails.getAdmsnYr() == null ? "2023-24" : studentDetails.getAdmsnYr();
+			Integer subStringAdmsnYr = Integer.parseInt(admsnYr.split("-")[0]);
+			Integer subStringFnclYr = Integer.parseInt(financialYear.split("-")[0]);
+			if(subStringFnclYr < subStringAdmsnYr) {
+				throw new CustomErrorHandler("Student has not taken admission in this year",
+						"Student has not taken admission in this year", 400);			
+			}
+/*			ObjectMapper objectMapper = new ObjectMapper();
 			Document d = objectMapper.readValue(getClass().getResource("/static/FeesDetails.json"), Document.class);
-			d.put("financialYear", financialYear);
+			d.put("financialYear", financialYear);*/
 
 			List<FeesDetails> response = getFeesDetailsByStdIdAndFinancialYear(stdId, financialYear);
 			Map<String, Object> feesDetailsBody = new LinkedHashMap<>();
@@ -75,17 +86,16 @@ public class FeeService {
 			feesDetailsBody.put("admissionFees", 500);
 			feesDetailsBody.put("examFees", 50);
 			feesDetailsBody.put("classStd", stdClass);
-			// 
-			List<Map<String,Object>> list = new ArrayList<>();
+			//
+			List<Map<String, Object>> list = new ArrayList<>();
 			FeesDetails fd = response.stream()
 					.filter(item1 -> item1.getFeesDetails().stream().anyMatch(it -> it.equals("ADMISSION"))).findAny()
 					.orElse(null);
 			List<String> feeFor = new ArrayList<>();
-			
+
 			response.stream().forEach(item -> {
-				
+
 				for (Fees fee : item.getFeesDetails()) {
-					
 					Map<String, Object> fdMap = new LinkedHashMap<>();
 					fdMap.put("id", UUID.randomUUID());
 					fdMap.put("feesFor", fee.getFeesFor());
@@ -97,7 +107,7 @@ public class FeeService {
 					feeFor.add(fee.getFeesFor());
 				}
 			});
-			if(!feeFor.contains("ADMISSION")) {
+			if (!feeFor.contains("ADMISSION")) {
 				Map<String, Object> fdMap = new LinkedHashMap<>();
 				fdMap.put("id", UUID.randomUUID());
 				fdMap.put("feesFor", "ADMISSION");
@@ -109,7 +119,7 @@ public class FeeService {
 				feeFor.remove("ADMISSION");
 			}
 
-			if(!feeFor.contains("EXAM")) {
+			if (!feeFor.contains("EXAM")) {
 				Map<String, Object> fdMap = new LinkedHashMap<>();
 				fdMap.put("id", UUID.randomUUID());
 				fdMap.put("feesFor", "EXAM");
@@ -120,10 +130,11 @@ public class FeeService {
 				list.add(fdMap);
 				feeFor.remove("EXAM");
 			}
-			
-			List<String> notContainMonths = MONTHS.stream().filter(item->!feeFor.contains(item)).collect(Collectors.toList());
-			notContainMonths.stream().forEach(item ->{
-				
+
+			List<String> notContainMonths = MONTHS.stream().filter(item -> !feeFor.contains(item))
+					.collect(Collectors.toList());
+			notContainMonths.stream().forEach(item -> {
+
 				Map<String, Object> fdMap = new LinkedHashMap<>();
 				fdMap.put("id", UUID.randomUUID());
 				fdMap.put("feesFor", item);
@@ -131,20 +142,19 @@ public class FeeService {
 				fdMap.put("userId", "");
 				fdMap.put("status", "PENDING");
 				fdMap.put("amount", 100);
-				list.add(fdMap);				
+				list.add(fdMap);
 			});
-			
-			
-			List<List<Map<String,Object>>> partitionList =  ListUtils.partition(list, 4);
-			System.out.println("Response " + d);
+
+			List<List<Map<String, Object>>> partitionList = ListUtils.partition(list, 4);
+		//	System.out.println("Response " + d);
 			feesDetailsBody.put("feesDetail", partitionList);
 			ObjectMapper obj = new ObjectMapper();
 			Document dd = obj.convertValue(feesDetailsBody, Document.class);
 			return dd;
 		} catch (Exception e) {
 			e.printStackTrace();
-			throw new CustomErrorHandler("Somthing went wrong to fetch all students ! please try again later",
-					"Somthing went wrong to fetch all students ! please try again later", 400);
+			throw new CustomErrorHandler(e.getMessage(),
+					e.getMessage(), 400);
 		}
 	}
 

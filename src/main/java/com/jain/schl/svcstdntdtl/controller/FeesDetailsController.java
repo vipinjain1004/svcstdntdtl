@@ -57,21 +57,22 @@ public class FeesDetailsController {
 
 	@Autowired
 	private FeeService feesService;
-	
 
 	@PostMapping("/add")
-	public GenericResponse add(@RequestBody Map<String,Object> document) throws CustomErrorHandler {
+	public GenericResponse add(@RequestBody Map<String, Object> document) throws CustomErrorHandler {
 		try {
-			Document response = feesService.getFeesDetails((String)document.get("studentId"), (String)document.get("financialYear"), (String)document.get("stdClass"));
+			Document response = feesService.getFeesDetails((String) document.get("studentId"),
+					(String) document.get("financialYear"), (String) document.get("stdClass"));
 			System.out.println("Request " + document);
 			document.put("createdDate", new Date());
-			//document.put("id", UUID.randomUUID());
+			// document.put("id", UUID.randomUUID());
 			FeesDetails d = feesService.addFeesDetails(document);
-			/*ObjectMapper objectMapper = new ObjectMapper();
-			Document d = objectMapper.readValue(getClass().getResource("/static/SubmitForm.json"), Document.class);	
-			d.put("totalAmout", document.get("totalAmout"));
-			System.out.println("Response " + d);
-*/			return getGenericResponse(d);
+			/*
+			 * ObjectMapper objectMapper = new ObjectMapper(); Document d =
+			 * objectMapper.readValue(getClass().getResource("/static/SubmitForm.json"),
+			 * Document.class); d.put("totalAmout", document.get("totalAmout"));
+			 * System.out.println("Response " + d);
+			 */ return getGenericResponse(d);
 		} catch (Exception e) {
 			e.printStackTrace();
 			throw new CustomErrorHandler("Somthing went wrong to fetch all students ! please try again later",
@@ -79,13 +80,19 @@ public class FeesDetailsController {
 		}
 
 	}
+
 	@GetMapping("/getDetails")
-	public GenericResponse getFeesDetails(@RequestParam(required=false) String financialYear, 
-			@RequestParam(required=true) String id) throws CustomErrorHandler {
-		Document document =  feesService.getFeesDetails(id, financialYear, null);
-		return getGenericResponseDocument(document);
+	public GenericResponse getFeesDetails(@RequestParam(required = false) String financialYear,
+			@RequestParam(required = true) String id) throws CustomErrorHandler {
+		try {
+			Document document = feesService.getFeesDetails(id, financialYear, null);
+			return getGenericResponseDocument(document);
+		} catch (Exception e) {
+			return exceptionResponse(e.getMessage(), 400);
+		}
 
 	}
+
 	private GenericResponse<Document> getGenericResponseDocument(Document document) {
 		GenericResponse<Document> genericResponse = new GenericResponse<>();
 		ResponseMetaData responseMetaData = new ResponseMetaData();
@@ -93,6 +100,7 @@ public class FeesDetailsController {
 		genericResponse.setResponseBody(document);
 		return genericResponse;
 	}
+
 	private GenericResponse<FeesDetails> getGenericResponse(FeesDetails document) {
 		GenericResponse<FeesDetails> genericResponse = new GenericResponse<>();
 		ResponseMetaData responseMetaData = new ResponseMetaData();
@@ -100,6 +108,7 @@ public class FeesDetailsController {
 		genericResponse.setResponseBody(document);
 		return genericResponse;
 	}
+
 	private GenericResponse<List<StudentDetails>> getGenericResponseList(List<StudentDetails> studentDetails,
 			Pagination pagination) {
 		GenericResponse<List<StudentDetails>> genericResponse = new GenericResponse<>();
