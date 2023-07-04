@@ -61,6 +61,7 @@ public class FeesDetailsController {
 	@PostMapping("/add")
 	public GenericResponse add(@RequestBody Map<String, Object> document) throws CustomErrorHandler {
 		try {
+			
 			Document response = feesService.getFeesDetails((String) document.get("studentId"),
 					(String) document.get("financialYear"), (String) document.get("stdClass"));
 			System.out.println("Request " + document);
